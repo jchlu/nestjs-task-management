@@ -15,13 +15,14 @@ import { Task, TaskStatus } from './task.model'
 import { title } from 'process'
 import { CreateTaskDto } from './create-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
-import { UpdateStatusDto } from './update-task.dto'
+import { UpdateTaskDto } from './update-task.dto'
 
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
+  @UsePipes(ValidationPipe)
   getTasks(@Query() tasksFilterDto: GetTasksFilterDto): Task[] {
     if (Object.keys(tasksFilterDto).length) {
       console.log(tasksFilterDto)
@@ -37,13 +38,13 @@ export class TasksController {
     return this.tasksService.getTaskById(id)
   }
 
-  @Patch('/:id/status')
+  @Patch('/:id')
   @UsePipes(ValidationPipe)
   updateTaskStatus(
     @Param('id') id: string,
-    @Body() updateStatusDto: UpdateStatusDto,
+    @Body() updateTaskDto: UpdateTaskDto,
   ): Task {
-    return this.tasksService.updateTaskStatus(id, updateStatusDto)
+    return this.tasksService.updateTaskStatus(id, updateTaskDto)
   }
 
   @Post()

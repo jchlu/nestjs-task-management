@@ -3,7 +3,7 @@ import { Task, TaskStatus } from './task.model'
 import { v1 as uuidv1 } from 'uuid'
 import { CreateTaskDto } from './create-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
-import { UpdateStatusDto } from './update-task.dto'
+import { UpdateTaskDto } from './update-task.dto'
 
 @Injectable()
 export class TasksService {
@@ -49,10 +49,18 @@ export class TasksService {
     return task
   }
 
-  updateTaskStatus(id: string, updateStatusDto: UpdateStatusDto): Task {
-    const { status } = updateStatusDto
+  updateTaskStatus(id: string, updateTaskDto: UpdateTaskDto): Task {
+    const { title, description, status } = updateTaskDto
     const task = this.getTaskById(id)
-    task.status = status
+    if (title) {
+      task.title = title
+    }
+    if (description) {
+      task.description = description
+    }
+    if (status) {
+      task.status = status
+    }
     return task
   }
 
