@@ -51,6 +51,7 @@ export class TasksService {
 
   updateTaskStatus(id: string, updateTaskDto: UpdateTaskDto): Task {
     const { title, description, status } = updateTaskDto
+    // getTaskById throws error if not found
     const task = this.getTaskById(id)
     if (title) {
       task.title = title

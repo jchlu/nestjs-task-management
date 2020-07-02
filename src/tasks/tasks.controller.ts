@@ -21,6 +21,7 @@ import { UpdateTaskDto } from './update-task.dto'
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
+  /** GET /tasks with optional filtering using query params */
   @Get()
   @UsePipes(ValidationPipe)
   getTasks(@Query() tasksFilterDto: GetTasksFilterDto): Task[] {
@@ -33,11 +34,13 @@ export class TasksController {
     }
   }
 
+  /** GET /tasks/uuid-formatted-id-number */
   @Get('/:id')
   getTaskById(@Param('id') id: string): Task {
     return this.tasksService.getTaskById(id)
   }
 
+  /** PATCH /tasks/uuid-formatted-id-number */
   @Patch('/:id')
   @UsePipes(ValidationPipe)
   updateTaskStatus(
@@ -47,12 +50,14 @@ export class TasksController {
     return this.tasksService.updateTaskStatus(id, updateTaskDto)
   }
 
+  /** POST /tasks */
   @Post()
   @UsePipes(ValidationPipe)
   createTask(@Body() createTaskDto: CreateTaskDto): Task {
     return this.tasksService.createTask(createTaskDto)
   }
 
+  /** DELETE /tasks/uuid-formatted-id-number */
   @Delete('/:id')
   deleteTask(@Param('id') id: string) {
     return this.tasksService.deleteTask(id)
