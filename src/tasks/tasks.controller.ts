@@ -11,11 +11,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import { TasksService } from './tasks.service'
-import { Task, TaskStatus } from './task.model'
-import { title } from 'process'
+import { Task } from './task.model'
 import { CreateTaskDto } from './create-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
 import { UpdateTaskDto } from './update-task.dto'
+import { TaskIdParam } from './task-id.params'
 
 @Controller('tasks')
 export class TasksController {
@@ -36,18 +36,19 @@ export class TasksController {
 
   /** GET /tasks/uuid-formatted-id-number */
   @Get('/:id')
-  getTaskById(@Param('id') id: string): Task {
-    return this.tasksService.getTaskById(id)
+  @UsePipes(ValidationPipe)
+  getTaskById(@Param() param: TaskIdParam): Task {
+    return this.tasksService.getTaskById(param)
   }
 
   /** PATCH /tasks/uuid-formatted-id-number */
   @Patch('/:id')
   @UsePipes(ValidationPipe)
   updateTaskStatus(
-    @Param('id') id: string,
+    @Param() param: TaskIdParam,
     @Body() updateTaskDto: UpdateTaskDto,
   ): Task {
-    return this.tasksService.updateTaskStatus(id, updateTaskDto)
+    return this.tasksService.updateTaskStatus(param, updateTaskDto)
   }
 
   /** POST /tasks */
@@ -59,7 +60,8 @@ export class TasksController {
 
   /** DELETE /tasks/uuid-formatted-id-number */
   @Delete('/:id')
-  deleteTask(@Param('id') id: string) {
-    return this.tasksService.deleteTask(id)
+  @UsePipes(ValidationPipe)
+  deleteTask(@Param() param: TaskIdParam) {
+    return this.tasksService.deleteTask(param)
   }
 }
