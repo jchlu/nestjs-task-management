@@ -9,58 +9,51 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common'
 import { TasksService } from './tasks.service'
 import { CreateTaskDto } from './create-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
 import { UpdateTaskDto } from './update-task.dto'
-import { TaskIdParam } from './task-id.params'
+import { Task } from './task.entity'
 
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   /** GET /tasks with optional filtering using query params */
-  // @Get()
-  // @UsePipes(ValidationPipe)
-  // getTasks(@Query() tasksFilterDto: GetTasksFilterDto): Task[] {
-  //   if (Object.keys(tasksFilterDto).length) {
-  //     console.log(tasksFilterDto)
-  //     // call the filter method
-  //     return this.tasksService.getFilteredTasks(tasksFilterDto)
-  //   } else {
-  //     return this.tasksService.getAllTasks()
-  //   }
-  // }
+  @Get()
+  @UsePipes(ValidationPipe)
+  async getTasks(@Query() tasksFilterDto: GetTasksFilterDto): Promise<Task[]> {
+    return this.tasksService.getTasks(tasksFilterDto)
+  }
 
-  /** GET /tasks/uuid-formatted-id-number */
-  // @Get('/:id')
-  // @UsePipes(ValidationPipe)
-  // getTaskById(@Param() param: TaskIdParam): Task {
-  //   return this.tasksService.getTaskById(param)
-  // }
+  /** GET /tasks/id-number */
+  @Get('/:id')
+  getTaskById(@Param('id', ParseIntPipe) id: number): Promise<Task> {
+    return this.tasksService.getTaskById(id)
+  }
 
-  /** PATCH /tasks/uuid-formatted-id-number */
-  // @Patch('/:id')
-  // @UsePipes(ValidationPipe)
-  // updateTaskStatus(
-  //   @Param() param: TaskIdParam,
-  //   @Body() updateTaskDto: UpdateTaskDto,
-  // ): Task {
-  //   return this.tasksService.updateTaskStatus(param, updateTaskDto)
-  // }
+  /** PATCH /tasks/id-number */
+  @Patch('/:id')
+  @UsePipes(ValidationPipe)
+  updateTaskStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ): Promise<Task> {
+    return this.tasksService.updateTask(id, updateTaskDto)
+  }
 
   /** POST /tasks */
-  // @Post()
-  // @UsePipes(ValidationPipe)
-  // createTask(@Body() createTaskDto: CreateTaskDto): Task {
-  //   return this.tasksService.createTask(createTaskDto)
-  // }
+  @Post()
+  @UsePipes(ValidationPipe)
+  createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.tasksService.createTask(createTaskDto)
+  }
 
-  /** DELETE /tasks/uuid-formatted-id-number */
-  // @Delete('/:id')
-  // @UsePipes(ValidationPipe)
-  // deleteTask(@Param() param: TaskIdParam) {
-  //   return this.tasksService.deleteTask(param)
-  // }
+  /** DELETE /tasks/id-number */
+  @Delete('/:id')
+  deleteTask(@Param('id', ParseIntPipe) id: number) {
+    return this.tasksService.deleteTask(id)
+  }
 }
