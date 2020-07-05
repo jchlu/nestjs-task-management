@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { Task, TaskStatus } from './task.model'
-import { v4 as uuidv4 } from 'uuid'
+import { TaskStatus } from './task.status.enum'
 import { CreateTaskDto } from './create-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
 import { UpdateTaskDto } from './update-task.dto'
@@ -8,9 +7,7 @@ import { TaskIdParam } from './task-id.params'
 
 @Injectable()
 export class TasksService {
-  private tasks: Task[] = []
-
-  getAllTasks(): Task[] {
+  /*  getAllTasks(): Task[] {
     return this.tasks
   }
 
@@ -76,4 +73,5 @@ export class TasksService {
       throw new NotFoundException(`No tasks found with an id of ${id}`)
     }
   }
+ */
 }

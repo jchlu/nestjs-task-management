@@ -7,6 +7,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   username: process.env.POSTGRES_USERNAME,
   password: process.env.POSTGRES_PASSWORD,
   database: 'taskmanagement',
-  entities: [__dirname + '/../**/*.entities.ts'],
+  entities: [__dirname + '/../**/*.entity.{ts,js}'],
   synchronize: true,
 }

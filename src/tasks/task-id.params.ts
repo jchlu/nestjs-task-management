@@ -1,6 +1,6 @@
-import { IsUUID } from 'class-validator'
+import { IsNotEmpty } from 'class-validator'
 
 export class TaskIdParam {
-  @IsUUID()
+  @IsNotEmpty()
   id: string
 }
