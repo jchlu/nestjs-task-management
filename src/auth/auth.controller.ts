@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  ValidationPipe,
-  UsePipes,
-} from '@nestjs/common'
+import { Controller, Post, Body, ValidationPipe } from '@nestjs/common'
 import { AuthCredsDto } from './dto/auth-creds.dto'
 import { AuthService } from './auth.service'
 
