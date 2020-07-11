@@ -5,12 +5,19 @@ import { TaskStatus } from './task.status.enum'
 import { NotFoundException } from '@nestjs/common'
 import { UpdateTaskDto } from './update-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
+import { User } from 'src/auth/user.entity'
+import { isError } from 'util'
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
-  async getTasks(taskFilterDto: GetTasksFilterDto): Promise<Task[]> {
+  async getTasks(
+    taskFilterDto: GetTasksFilterDto,
+    user: User,
+  ): Promise<Task[]> {
     const { status, search } = taskFilterDto
+    const { id } = user
     const query = this.createQueryBuilder('task')
+    query.where('task.userId = :id', { id })
     if (status) {
       query.andWhere('task.status = :status', { status })
     }
@@ -23,13 +30,15 @@ export class TaskRepository extends Repository<Task> {
     return query.getMany()
   }
 
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { title, description } = createTaskDto
     const task = new Task()
     task.title = title
     task.description = description
     task.status = TaskStatus.OPEN
+    task.user = user
     await task.save()
+    delete task.user
     return task
   }
 
