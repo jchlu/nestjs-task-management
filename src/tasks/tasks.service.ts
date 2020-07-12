@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException, Delete } from '@nestjs/common'
+import {
+  Injectable,
+  NotFoundException,
+  Delete,
+  Logger,
+  InternalServerErrorException,
+} from '@nestjs/common'
 import { CreateTaskDto } from './create-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
 import { UpdateTaskDto } from './update-task.dto'
@@ -9,6 +15,7 @@ import { User } from 'src/auth/user.entity'
 
 @Injectable()
 export class TasksService {
+  private logger = new Logger('TasksService')
   constructor(
     @InjectRepository(TaskRepository)
     private taskRepository: TaskRepository,
@@ -33,7 +40,21 @@ export class TasksService {
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    return this.taskRepository.createTask(createTaskDto, user)
+    try {
+      this.logger.verbose(
+        `User ${user.username} creating a task with data: ${JSON.stringify(
+          createTaskDto,
+        )}`,
+      )
+      return this.taskRepository.createTask(createTaskDto, user)
+    } catch (error) {
+      this.logger.error(
+        `Unable to create task for "${
+          user.username
+        }" with data: ${JSON.stringify(createTaskDto)}`,
+      )
+      throw new InternalServerErrorException()
+    }
   }
 
   async updateTask(
@@ -45,11 +66,25 @@ export class TasksService {
       throw new NotFoundException()
     }
     const taskToUpdate = await this.getTaskById(id, user)
-    return await this.taskRepository.updateTask(taskToUpdate, updateTaskDto)
+    try {
+      return await this.taskRepository.updateTask(taskToUpdate, updateTaskDto)
+    } catch (error) {
+      this.logger.error(
+        `Unable to update task for user ${
+          user.username
+        } with data: ${JSON.stringify(updateTaskDto)}`,
+      )
+      throw new InternalServerErrorException()
+    }
   }
 
   async deleteTask(id: number, user: User): Promise<Task> {
     const taskToDelete = await this.getTaskById(id, user)
-    return await this.taskRepository.deleteTask(taskToDelete)
+    try {
+      return await this.taskRepository.deleteTask(taskToDelete)
+    } catch (error) {
+      this.logger.error(`Unable to delete task ${id} for user ${user.username}`)
+      throw new InternalServerErrorException()
+    }
   }
 }
