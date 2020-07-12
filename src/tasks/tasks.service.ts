@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException, Delete } from '@nestjs/common'
-import { TaskStatus } from './task.status.enum'
 import { CreateTaskDto } from './create-task.dto'
 import { GetTasksFilterDto } from './get-tasks-filter.dto'
 import { UpdateTaskDto } from './update-task.dto'

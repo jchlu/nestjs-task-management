@@ -4,7 +4,6 @@ import {
   Body,
   ValidationPipe,
   UseGuards,
-  Req,
 } from '@nestjs/common'
 import { AuthCredsDto } from './dto/auth-creds.dto'
 import { AuthService } from './auth.service'
