@@ -1,0 +1,8 @@
+db:
+  username: 'postgres'
+  password: 'timorous-syllabic-inca-entry'
+  host: '127.0.0.1'
+  synchronize: true
+
+jwt:
+  secret: 'eb981668-a6ac-4db7-ad4a-5d1490f150be'
