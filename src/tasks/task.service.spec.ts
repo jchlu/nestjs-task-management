@@ -11,8 +11,8 @@ const mockTaskRepository = () => ({
 const mockUser = { username: 'Testy McTesting' }
 
 describe('TasksService', () => {
-  let tasksService: TasksService
-  let taskRepository: TaskRepository
+  let tasksService
+  let taskRepository
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
